@@ -1,0 +1,29 @@
+# Install messung on PI
+# download 2021-03-04-raspios-buster-armhf-lite.img
+# to find last attached device
+ls -tr /dev/
+# connect min 2GB sd-card to your maschine
+# to find last attached device differenz
+ls -tr /dev/
+# to copy the image
+sudo dd bs=1M if=/path/to/raspios.img of=/dev/your_card_name_without_any_number_on_end status=progress conv=fsync	
+# das dauert ne weile
+# copy the files 'ssh' and modified 'wpa_supplicant.conf' to /path_to_FAT32_boot_partition/*
+# copy dir 'messung' to /path_to_Linux_root_fs_Partition/home/pi/
+# now put card in raspi and boot it
+# login with 'ssh pi@xxx.xxx.xxx' password ist 'raspberry'
+# run sudo raspi-config and enable: Systemoptions -> boot autologin -> Console Autologin, interface options -> i2c enable, set locale only "de_UTF8", set timezone, change password, expand filesystem, and reboot
+# login with 'ssh pi@xxx.xxx.xxx' password ist 'youpassword'
+sudo apt-get update
+sudo apt-get install lighttpd php7.3 php7.3-fpm php7.3-sqlite3 php7.3-gd python3-smbus
+# es kommt ein prommt mit j return bestätigen -> das dauert ne weile
+
+sudo nano /etc/sudoers
+# copy "www-data ALL=NOPASSWD: /usr/bin/systemctl" at the end of the file
+# copy "www-data ALL=NOPASSWD: /usr/bin/chmod" at the end of the file 
+# copy "www-data ALL=NOPASSWD: /usr/sbin/i2cdetect" at the end of the file
+# copy "www-data ALL=NOPASSWD: /usr/bin/raspi-config" at the end of the file
+cd messung
+sudo ./install.py
+# and look the webpage of pi by typing http://xxx.xxx.xxx (wher X is the ip of your pi :) in your browser
+# Now konfigure your adcs1115 and sensors
